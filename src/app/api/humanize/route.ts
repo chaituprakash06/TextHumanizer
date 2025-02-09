@@ -1,3 +1,4 @@
+// src/app/api/humanize/route.ts
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
@@ -9,29 +10,31 @@ export async function POST(request: Request) {
   try {
     const { text, mode } = await request.json()
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview",
+    const completion = await openai.chat.completions.create({
+      model: "o3-mini",
+      store: true,
       messages: [
         {
           role: "system",
           content: `You are an expert at making text sound more human and natural. 
-                   Maintain the original meaning but make it sound more conversational 
-                   and natural based on the selected style: ${mode}.`
+                   Your task is to rewrite the given text to sound more natural and 
+                   conversational while preserving its original meaning. 
+                   Current style mode: ${mode}`
         },
         {
           role: "user",
-          content: `Transform this text to sound more human while maintaining its meaning: ${text}`
+          content: text
         }
       ]
     })
 
     return NextResponse.json({
-      humanizedText: response.choices[0].message.content
+      humanizedText: completion.choices[0].message.content
     })
   } catch (error) {
-    console.error('Error:', error)
+    console.error('Error details:', error)
     return NextResponse.json(
-      { error: 'Failed to process text' },
+      { error: 'Failed to process text', details: error.message },
       { status: 500 }
     )
   }
