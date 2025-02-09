@@ -1,18 +1,16 @@
-export function Button({
-    children,
-    onClick,
-    disabled,
-    variant = 'primary'
-  }: {
-    children: React.ReactNode
-    onClick?: () => void
-    disabled?: boolean
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary'
-  }) {
+    children: React.ReactNode
+  }
+  
+  export function Button({ 
+    children, 
+    variant = 'primary', 
+    ...props 
+  }: ButtonProps) {
     return (
       <button
-        onClick={onClick}
-        disabled={disabled}
+        {...props}
         className={`px-4 py-2 rounded-lg transition ${
           variant === 'primary'
             ? 'bg-cyan-500 hover:bg-cyan-600 text-white'

@@ -31,7 +31,9 @@ export async function POST(request: Request) {
     return NextResponse.json({
       humanizedText: completion.choices[0].message.content
     })
-  } catch (error) {
+  } catch (err) {
+    // Type the error properly
+    const error = err as Error
     console.error('Error details:', error)
     return NextResponse.json(
       { error: 'Failed to process text', details: error.message },
